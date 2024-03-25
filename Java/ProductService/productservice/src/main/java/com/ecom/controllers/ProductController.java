@@ -13,18 +13,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecom.models.Product;
+import com.ecom.productservice.ProductService;
 
 @RestController
 @RequestMapping("products")
 public class ProductController {
+    private ProductService productService;
+
+    ProductController(ProductService productService) {
+        this.productService = productService;
+    }
     @GetMapping("/{id}")
     public Product getProduct(@PathVariable("id") Long id) {
-        return new Product();
+        return this.productService.getProductById(id);
     }
 
-    @GetMapping
+    @GetMapping("/")
     public List<Product> getAllProducts() {
-        return new  ArrayList<>();
+        return productService.getAllProducts();
     }
 
     @PostMapping
