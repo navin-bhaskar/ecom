@@ -1,8 +1,9 @@
 package com.ecom.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,27 +25,32 @@ public class ProductController {
         this.productService = productService;
     }
     @GetMapping("/{id}")
-    public Product getProduct(@PathVariable("id") Long id) {
-        return this.productService.getProductById(id);
+    public ResponseEntity<Product> getProduct(@PathVariable("id") Long id) {
+        var prod = productService.getProductById(id);
+        return new ResponseEntity<>(prod, HttpStatus.OK);
     }
 
     @GetMapping("/")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts() {
+        var allProducts = productService.getAllProducts();
+        return new ResponseEntity<>(allProducts, HttpStatus.OK);
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product prod) {
-        return new Product();
+    public ResponseEntity<Product> createProduct(@RequestBody Product prod) {
+        var createdProduct = new Product();
+        return new ResponseEntity<>(createdProduct, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
-    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-        return new Product();
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+        var updatedProduct = new Product();
+        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public Product replaceProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-        return new Product();
+    public ResponseEntity<Product> replaceProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+        var updatedProduct = new Product();
+        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 }
