@@ -2,6 +2,7 @@ package com.ecom.controllers;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecom.exceptions.InvalidProductIdException;
 import com.ecom.models.Product;
 import com.ecom.productservice.ProductService;
 
@@ -21,11 +23,12 @@ import com.ecom.productservice.ProductService;
 public class ProductController {
     private ProductService productService;
 
-    ProductController(ProductService productService) {
+    ProductController(@Qualifier("selfProductService") ProductService productService) {
         this.productService = productService;
     }
+    
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable("id") Long id) {
+    public ResponseEntity<Product> getProduct(@PathVariable("id") Long id) throws InvalidProductIdException {
         var prod = productService.getProductById(id);
         return new ResponseEntity<>(prod, HttpStatus.OK);
     }
@@ -36,9 +39,9 @@ public class ProductController {
         return new ResponseEntity<>(allProducts, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<Product> createProduct(@RequestBody Product prod) {
-        var createdProduct = new Product();
+        var createdProduct = productService.createProduct(prod);
         return new ResponseEntity<>(createdProduct, HttpStatus.OK);
     }
 
@@ -48,9 +51,9 @@ public class ProductController {
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Product> replaceProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-        var updatedProduct = new Product();
+        var updatedProduct = productService.replaceProduct(id, product);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 }
